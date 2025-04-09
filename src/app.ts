@@ -1,6 +1,7 @@
 import express, {Application} from 'express';
 import cors from 'cors';
 import connectToDb from './config/connectToDb';
+import router from './routes/routes';
 
 class App{
     private server: Application;
@@ -11,6 +12,8 @@ class App{
         this.port = process.env.PORT || 3001;
         connectToDb();
 
+        this.middleware();
+        this.routers();
     }
 
     private middleware(){
@@ -18,12 +21,14 @@ class App{
         this.server.use(cors());
     }
 
-    private routers(){}
+    private routers(){
+        this.server.use('/api', router);
+    }
 
     public start(){
         this.server.listen(this.port, ()=>{
-            console.log(`Servidor Typescript rodando http://localhost:${this.port}`)
-        })
+            console.log(`Servidor Typescript rodando http://localhost:${this.port}/api`);
+        });
     }
 }
 
